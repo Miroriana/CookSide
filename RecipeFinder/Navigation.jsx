@@ -10,6 +10,7 @@ import Details from './bottomNav/Details'
 import SignIn from './cookside/signIn';
 import SignUp from './cookside/signup';
 import GetStarted from './cookside/getStarted';
+import Subscribe from './cookside/subscribe';
 
 
 const Stack = createNativeStackNavigator();
@@ -59,6 +60,7 @@ export default function Navigation() {
                 <Stack.Screen name="More" component={Details} options={{ headerShown: false }} />
                 <Stack.Screen name="signIn" component={SignIn} options={{ headerShown: false }} />
                 <Stack.Screen name="signUp" component={SignUp} options={{ headerShown: false }} />
+                <Stack.Screen name="subscribe" component={Subscribe} options={{ headerShown: false }} />
             </Stack.Navigator>
         </NavigationContainer>
     );

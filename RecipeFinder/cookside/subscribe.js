@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-export default function Subscribe() {
+export default function Subscribe({navigation}) {
     return (
         <View style={{ width: "100%", height: "100%" }}>
             <View style={{ marginTop: 30, display: "flex", flexDirection: "row", gap: 100 }}>
@@ -54,7 +54,7 @@ export default function Subscribe() {
                     </View>
                 </ScrollView>
             </View>
-            <TouchableOpacity style={{ backgroundColor: "#EB9800", width: "91%", display: "flex", justifyContent: "center", alignSelf: "center", borderRadius: 30, marginTop: 17}}>
+            <TouchableOpacity onPress={()=>navigation.navigate("signIn")} style={{ backgroundColor: "#EB9800", width: "91%", display: "flex", justifyContent: "center", alignSelf: "center", borderRadius: 30, marginTop: 17}}>
                 <Text style={{ color: "white", padding: 12, textAlign: "center", fontWeight: '400' }}>Pay Now</Text>
             </TouchableOpacity>
         </View>

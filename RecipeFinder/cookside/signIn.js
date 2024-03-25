@@ -10,8 +10,6 @@ export default function SignIn({ navigation }) {
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [confirmPasswordError, setConfirmPasswordError] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(true);
 
     const isValidEmail = (email) => {
@@ -38,19 +36,16 @@ export default function SignIn({ navigation }) {
         } else {
             setPasswordError('');
         }
-        if (password !== confirmPassword) {
-            setConfirmPasswordError("password doesn't match");
-            valid = false;
-        } else {
-            setConfirmPasswordError('');
-        } return valid
+
+        return valid
     }
 
     const auth = FIREBASE_AUTH;
     const handleSubmit = async () => {
-        if (validForm() === true) {
+        console.log("hdghfh")
+        if (validForm()) {
             try {
-                await signInWithEmailAndPassword(auth, email, password);
+                response = await signInWithEmailAndPassword(auth, email, password);
                 navigation.navigate("home")
             } catch (error) {
                 console.log(error.code);
@@ -75,11 +70,6 @@ export default function SignIn({ navigation }) {
                 <Text style={{ marginBottom: 5, fontWeight: "bold", marginTop: 15 }}>Password</Text>
                 <TextInput style={{ backgroundColor: "whitesmoke", width: "95%", padding: 7, borderRadius: 10, borderWidth: 1, borderColor: "#EB9800" }} secureTextEntry onChangeText={(p) => { setPassword(p) }}></TextInput>
                 {passwordError ? <Text style={{ color: 'red', paddingTop: 2 }}>{passwordError}</Text> : null}
-
-                <Text style={{ marginBottom: 5, fontWeight: "bold", marginTop: 15 }}>Confirm Password</Text>
-                <TextInput style={{ backgroundColor: "whitesmoke", width: "95%", padding: 7, borderRadius: 10, borderWidth: 1, borderColor: "#EB9800" }} secureTextEntry onChangeText={(cp) => { setConfirmPassword(cp) }}></TextInput>
-                {confirmPasswordError ? <Text style={{ color: 'red', paddingTop: 2 }}>{confirmPasswordError}</Text> : null}
-
             </View>
             <TouchableOpacity onPress={() => handleSubmit()} style={{ backgroundColor: "#EB9800", width: "91%", display: "flex", justifyContent: "center", alignSelf: "center", borderRadius: 30, marginTop: 30 }}>
                 <Text style={{ color: "white", padding: 12, textAlign: "center", fontWeight: '400' }}>Sign In</Text>
