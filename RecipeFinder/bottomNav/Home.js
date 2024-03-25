@@ -5,19 +5,21 @@ import { MaterialIcons, MaterialCommunityIcons } from 'react-native-vector-icons
 import Popular from '../Components/Popular'
 import Foryou from '../Components/Foryou'
 import Categories from '../Components/Categories'
+import { SliderBox } from 'react-native-image-slider-box';
 
 const width = Dimensions.get('screen').width
 const height = Dimensions.get('screen').height
 
-export default function Home() {
+export default function Home({ navigation }) {
 
     const [horiRecipes, setHoriRecipes] = useState([]);
     const [vertiRecipes, setVertiRecipes] = useState([]);
     const [breakRecipes, setBreakRecipes] = useState([]);
+    const [showAllCategories, setShowAllCategories] = useState(false);
 
     useEffect(() => {
         const fetchRecipes = async () => {
-            const url = 'https://www.themealdb.com/api/json/v1/1/search.php?f=c';
+            const url = 'https://www.themealdb.com/api/json/v1/1/search.php?f=v';
             try {
                 const response = await fetch(url);
                 const data = await response.json();
@@ -28,18 +30,18 @@ export default function Home() {
         };
         fetchRecipes();
 
+
         const fetchRecipes3 = async () => {
-            const url = 'https://www.themealdb.com/api/json/v1/1/filter.php?c=Breakfast';
+            const url = 'https://themealdb.com/api/json/v1/1/categories.php';
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                setBreakRecipes(data.meals);
+                setBreakRecipes(data.categories);
             } catch (error) {
                 console.error(error);
             }
         };
         fetchRecipes3();
-
 
         const fetchRecipes2 = async () => {
             const url = 'https://www.themealdb.com/api/json/v1/1/search.php?f=b';
@@ -53,6 +55,28 @@ export default function Home() {
         };
         fetchRecipes2();
     }, []);
+
+    const recipeImages = horiRecipes.map(recipe => ({
+        image: recipe.strMealThumb,
+        meal: recipe.strMeal,
+
+    }));
+
+
+    const handleSeeAllCategories = () => {
+        setShowAllCategories(true);
+    };
+
+    const handleCategoryPress = async (categoryId) => {
+        const url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoryId}`;
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            setVertiRecipes(data.meals);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <View style={{ width: width, height: height, padding: 20, backgroundColor: 'black' }}>
@@ -77,34 +101,50 @@ export default function Home() {
 
                 <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', padding: 10, marginTop: 20 }}>Popular Recipes</Text>
 
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                    {horiRecipes.map(recipe => (
-                        <View key={recipe.idMeal} style={{ marginRight: 15 }}>
-                            <Popular image={recipe.strMealThumb} category={recipe.strCategory} meal={recipe.strMeal} />
-                        </View>
-                    ))}
-                </ScrollView>
+                <View style={{ width: width }}>
+                    <Text style={{ fontSize: 20, fontWeight: 500, color: 'black', position: 'absolute', bottom: 0, left: 10 }}>Hori</Text>
+                    <SliderBox
+                        images={recipeImages.map(recipe => recipe.image)}
+                        sliderBoxHeight={150} dotColor="orange" inactiveDotColor="white" autoplay autoplayInterval={3000}
+                        sliderBoxImageStyle={{ borderRadius: 50, width: 250, height: 150 }}
+                        onSliderBoxPressed={(index) => console.warn(`Recipe ${index + 1} pressed`)}
+                        onCurrentImagePressed={(index) => console.warn(`Recipe ${index + 1} pressed`)}
+                    />
+                </View>
+
+
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20, padding: 10 }}>
                     <Text style={{ fontSize: 20, fontWeight: 500, color: 'white' }}>Categories</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handleSeeAllCategories}>
                         <Text style={{ color: 'orange', fontWeight: 500 }}>See All</Text>
                     </TouchableOpacity>
                 </View>
+
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                    {breakRecipes.map(recipe => (
-                        <View key={recipe.idMeal}>
-                            <Categories image={recipe.strMealThumb} />
-                            <Text style={{ color: 'white' }}></Text>
-                        </View>
-                    ))}
+                    {showAllCategories
+                        ? breakRecipes.map(category => (
+                            <TouchableOpacity key={category.idCategory} onPress={() => handleCategoryPress(category.strCategory)}>
+                                <View>
+                                    <Categories image={category.strCategoryThumb} category={category.strCategory} />
+                                </View>
+                            </TouchableOpacity>
+                        ))
+                        : breakRecipes.slice(0, 4).map(category => (
+                            <TouchableOpacity key={category.idCategory} onPress={() => handleCategoryPress(category.strCategory)}>
+                                <View>
+                                    <Categories image={category.strCategoryThumb} category={category.strCategory} />
+                                </View>
+                            </TouchableOpacity>
+                        ))
+                    }
                 </ScrollView>
 
-                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', padding: 10,  }}>Recipes For You</Text>
-                <ScrollView style={{ marginTop: 10 }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', padding: 10, marginTop: 15 }}>Recipes For You</Text>
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                         {vertiRecipes.map(recipe => (
                             <View key={recipe.idMeal} style={{ width: '50%' }}>
-                                <Foryou image={recipe.strMealThumb} meal={recipe.strMeal} />
+                                <Foryou image={recipe.strMealThumb} category={recipe.strCategory} tags={recipe.strTags} onpress={() => navigation.navigate('More')} />
                             </View>
                         ))}
                     </View>

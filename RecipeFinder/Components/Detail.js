@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, ImageBackground, TouchableOpacity } from 'react-native'
 import { Feather } from 'react-native-vector-icons'
 
-export default function Popular({ image, category, meal }) {
+export default function Popular({ image, category, meal,}) {
 
 
     return (

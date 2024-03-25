@@ -2,13 +2,18 @@ import React, { useState } from 'react';
 import { ImageBackground, View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from 'react-native-vector-icons';
 
-export default function Foryou({ image, category,onpress, tags }) {
+export default function Foryou({ image, meal, onpress, tags }) {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   const toggleBookmark = () => {
     setIsBookmarked(!isBookmarked);
   };
-  
+
+  const [rating, setRating] = useState(4.5);
+  const handleStarPress = () => {
+    setRating(rating + 0.1);
+  };
+
   return (
     <View>
       <TouchableOpacity onPress={onpress}>
@@ -21,12 +26,20 @@ export default function Foryou({ image, category,onpress, tags }) {
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View>
-          <Text style={{ color: 'white', fontWeight: '500', fontSize: 18, paddingHorizontal: 10, paddingTop: 10}}>{category}</Text>
-          <Text style={{ color: 'white', fontWeight: '500', fontSize: 15, paddingHorizontal: 10, paddingBottom: 10}}>{tags}</Text>
+          <Text style={{ color: 'white', fontWeight: '500', fontSize: 18, paddingHorizontal: 10, paddingTop: 10 }}>{meal}</Text>
+          <Text style={{ color: 'white', fontWeight: '500', fontSize: 15, paddingHorizontal: 10, paddingBottom: 10  }}>{tags}</Text>
+        </View>
+
+        <View style={{ flexDirection: 'row', paddingTop: 20, paddingRight: 20, gap: -7 }}>
+          <TouchableOpacity onPress={handleStarPress}>
+            <Ionicons name="star" size={15} color="orange" />
+          </TouchableOpacity>
+          <Text style={{ color: 'white', fontWeight: '500', fontSize: 15, paddingHorizontal: 10, paddingBottom: 10 }}>{rating.toFixed(1)}</Text>
         </View>
 
       </View>
     </View>
+
 
   );
 }

@@ -7,14 +7,20 @@ import SignUp from './cookside/signup';
 import SignIn from './cookside/signIn';
 import Subscribe from './cookside/subscribe';
 import Navigation from './Navigation';
+import Home from './bottomNav/Home'
+import NotiScreen from './Components/NotiScreen';
+import Details from './bottomNav/Details'
+import Search from './bottomNav/Search'
 
 export default function App() {
   return (
-    <View style={{ width: "100%", height: "100%" }}>
-      
-        <Navigation />
 
-    </View>
+    <Navigation />
+    // <Home />
+    // <NotiScreen />
+    // <Details />
+    // <Search />
+
   );
 }
 
